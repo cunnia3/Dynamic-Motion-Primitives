@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 t = np.arange(0, np.pi/2, 0.01)
-y = np.sin(t)
+y = t
 
 testDMP= DMP()
 testDMP.setExample(y,t)

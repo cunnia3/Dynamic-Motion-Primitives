@@ -60,7 +60,7 @@ class ForcingFunction:
     @params
         nbfs = number of basis functions
     """
-    def __init__(self,nbfs = 100):
+    def __init__(self,nbfs = 500):
         self.nbfs = nbfs
         self.basisFunctions = []
         for x in range(0,nbfs):
@@ -173,9 +173,9 @@ class DMP:
         self.example = np.array([])
         self.exampleTime = np.array([])
         
-        self.responseAccel = np.array([0])
-        self.responseVel = np.array([1])
-        self.responsePos = np.array([0])
+        self.responseAccel = np.array([])
+        self.responseVel = np.array([])
+        self.responsePos = np.array([])
         
         self.stepTime = .01 #step time
         self.stepNumber = 0
@@ -189,7 +189,25 @@ class DMP:
         self.attractor.eqPoint=example[-1]
         
     def imitate(self):
+        # TRAIN WEIGHTS ON BASIS FUNCTIONS
         self.ff.train(self.attractor,self.example,self.exampleTime)
+        
+        # SET INITIAL STATES OF OUR RESPONSE TO MATCH EXAMPLE
+        exampleVel = np.diff(self.example)/(self.exampleTime[1]-self.exampleTime[0])
+        exampleAccel = np.diff(exampleVel)/(self.exampleTime[1]-self.exampleTime[0])
+        
+        self.responseAccel = np.array([])
+        self.responseVel = np.array([])
+        self.responsePos = np.array([])
+        
+        self.responsePos = np.append(self.responseVel,self.example[0])
+        self.responseVel = np.append(self.responseVel,exampleVel[0])
+        self.responseAccel = np.append(self.responseAccel,exampleAccel[0])
+        
+        print self.responsePos
+        print self.responseVel
+        print self.responseAccel
+        
                 
     def step(self):         
         # UPDATE STATE
