@@ -140,7 +140,7 @@ class ForcingFunction:
         responseFF = self.responseToTimeArray(time)
         plt.figure()
         plt.title('Trained Forcing Function and Desired Forcing Function')
-        plt.plot(responseFF,'g-')
+        plt.plot((g-y0)*responseFF,'g-')
         plt.plot(Farray,'r--')
         plt.show()
         
@@ -155,7 +155,6 @@ class ForcingFunction:
             responseWithWeight += self.weights[i]*basisFunction.response(self.cannonicalSystem(time))
             i+=1
             
-        # TODO ADD SCALING
         return (responseWithWeight/responseWithoutWeight)*self.cannonicalSystem(time)
     
     def responseToTimeArray(self,timeArray):
@@ -222,11 +221,10 @@ class DMP:
         self.responsePos = np.append(self.responsePos,newPos)
         
         # CALCULATE NEW ACCEL  
-        newAccel = self.attractor.response(currentPos,currentVel,self.stepTime) + self.ff.response(self.stepNumber * self.stepTime)        
+        newAccel = self.attractor.response(currentPos,currentVel,self.stepTime) + (self.example[-1]-self.example[0])*self.ff.response(self.stepNumber * self.stepTime)        
         self.responseAccel = np.append(self.responseAccel,newAccel)        
         
         self.stepNumber += 1
-        
     
     def run(self, timeToRun):
         while self.stepNumber*self.stepTime < timeToRun:
