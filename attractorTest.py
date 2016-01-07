@@ -8,13 +8,13 @@ from DMPLib import DMP
 import numpy as np
 import matplotlib.pyplot as plt
 
-t = np.arange(0, np.pi/2, 0.01)
-y = t
+t = np.arange(0, 1, 0.01)
+y = t*t
 
 testDMP= DMP()
 testDMP.setExample(y,t)
 testDMP.imitate()
-testDMP.run(np.pi/2)
+testDMP.run(1)
 
 result = testDMP.responsePos
 
